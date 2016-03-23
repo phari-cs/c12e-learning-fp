@@ -54,9 +54,9 @@ object IList {
         // if its not curried, need [A] on both
         // list.fold(nil[A], cons[A])
         list.fold(nil[A])(cons)
-        // since its curried, we can do this
 
-        // // if you curry, more stuff on heap
+        // Note: when you curry you add more stuff on heap (intermediary functions i guess) so it might not be wise to curry everything
+        // Note: currying allows us to do this: (this is because if a funciton takes only one arg in scala, we dont need to use the () to call it)
         // list.fold(nil[A]) {
         //     ... define function
         // }
