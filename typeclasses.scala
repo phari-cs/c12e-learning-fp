@@ -39,7 +39,7 @@ final case class Max[A](a: A) extends AnyVal
 
 // @ImplicitsNotFound("need a semigroup typeclass")I
 trait Semigroup[A] {
-    // must associative a append b append c = ((a app b) append) = (a append (b append c))
+    // must be associative a append b append c = ((a app b) append) = (a append (b append c))
     def append(a1: A, a2: A): A
 }
 
@@ -66,7 +66,20 @@ trait Semigroup[A] {
 
 // new on classes and traits
 
-object Semigroup {
+
+// code organization
+// implicit resolution and precendence orders
+// search and find before it finds anything else
+// search lower in the tree first
+// resolution
+trait SemigroupInstances {
+
+}
+
+
+// object Semigroup {
+// Do this to enable syntax
+object Semigroup extends SemigroupInstances{
 
     // similar to __call__
     // Before this line Semigroup() would return nothing
@@ -85,7 +98,48 @@ object Semigroup {
         new Semigroup[Max[Int]] {
             def append(a1: Max[Int], a2: Max[Int]) = Max(math.max(a1.a, a2.a))
         }
+
+    //////////////////////////////[A: Semigroup, B: Semigroup] - context bound
+    ///////////////////////////// desugars into
+    // implicit val tupleSemigroup[A, B](impilcit ev1, Semigroup[A], ...): Semigroup[(A, B)] = {
+    // only works for something that only has one block
+
+    // This is syntax sugar, where :> is to imply inhereitance
+    // only works with defs,
+    // if its a val, cant use type parameters at all
+    implicit def tupleSemigroup[A: Semigroup, B: Semigroup]: Semigroup[(A, B)] = {
+        new Semigroup[(A, B)] {
+            // Since apply is implicit, Semigroup[A] goes and pulls that semigroup...
+            def append(p1: (A, B), p2: (A, B)): (A, B) = (Semigroup[A].append(p1._1, p2._1), Semigroup[B].append(p1._2, p2._2))
+        }
+    }
 }
+
+// Has to be a class
+// Traits cant take parameters
+// Extend anyval from warrapping in SemigroupSyntax just to stick a function on it
+// Val makes a public val
+// Could have been called SemigroupOps as well
+// there is no point extending it, everything is called implicitly ... thats why its final
+
+// doesnt use implicit class because it doesnt work with anyval
+final class SemigroupOps[A](val a: A) extends AnyVal {
+    // Feature called implicit classes - dont work well with boxing
+    // Non implicit class way
+
+    // different ++ -> only on list...
+    // this will exist on all semigroups
+    def |+|(a2: A)(implicit ev1: Semigroup[A]) = ev1.append(a, a2)
+}
+
+// Mix trait into package objects
+trait SemigroupSyntax {
+    implicit def semigroupToOps[A: Semigroup](a:A): SemigroupOps[A] =
+        new SemigroupOps(a)
+}
+
+// Lets us import it ... cant import trait
+object SemigroupSyntax extends SemigroupSyntax
 
 object ExampleApp extends App {
     println(Semigroup.Pi)
@@ -97,6 +151,20 @@ object ExampleApp extends App {
     // explicitly pass an implicit parameter
     println(Semigroup.apply(Semigroup.stringSemigroup).append("a", "b"))
 }
+
+// console ...
+
+// import com.c12e.learn_
+// import com.c12e.learn.Semigroup
+// import com.c12e.learn.SemigroupSyntax._
+//
+// "sdsds" |+| "sdsds"
+// List("asdasd") |+| List("asdsadas")
+// // Fails = treats |+| as getting two args on right side
+// (("c", "d"), IList.cons("e", IList.nil)) |+| (("a", "b"), IList.nil[String])
+// // Wrap two args with paren...
+// (("c", "d"), IList.cons("e", IList.nil)) |+| (((("a", "b"), IList.nil[String])))
+
 
 /*
 Good Properties for a type class
