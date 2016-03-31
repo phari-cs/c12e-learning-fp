@@ -2,7 +2,8 @@ package com.c12e.learn
 
 
 sealed abstract class IList[A] {
-
+  // Almost the same
+  // def fold[B](ifNil: B, ifCons: (A, B) => B): B =
   def fold[B](ifNil: B)(ifCons: (A, B) => B): B =
     this match {
       case INil() => ifNil
@@ -15,6 +16,9 @@ sealed abstract class IList[A] {
       case ICons(h, t) => ICons(h, t ++ that)
     }
 
+  def append(that: IList[A]): IList[A] = ???
+  // TODO: implemnt this using Fold instead of pattern matching
+
 }
 
 final case class INil[A]() extends IList[A]
@@ -22,6 +26,9 @@ final case class ICons[A](head: A, tail: IList[A])  extends IList[A]
 
 
 object IList {
+
+   // No real motivation use "this" here
+   val test = this // (companion object itself)
 
    def nil[A]: IList[A] = INil()
    def cons[A](head : A, tail: IList[A]): IList[A] = ICons(head, tail)
