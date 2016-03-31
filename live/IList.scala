@@ -8,13 +8,13 @@ sealed abstract class IList[A] {
       case INil() => ifNil
       case ICons(h, t) => ifCons(h, t.fold(ifNil)(ifCons))
     }
-   
+
   def ++(that: IList[A]): IList[A] =
     this match {
       case INil() => that
       case ICons(h, t) => ICons(h, t ++ that)
     }
-    
+
 }
 
 final case class INil[A]() extends IList[A]
@@ -33,6 +33,6 @@ object IList {
    implicit def ilistSemigroup[A]: Semigroup[IList[A]] =
      new Semigroup[IList[A]] {
        def append(l1: IList[A], l2: IList[A]) = l1 ++ l2
-     } 
+     }
 
 }
