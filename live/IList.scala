@@ -16,9 +16,10 @@ sealed abstract class IList[A] {
       case ICons(h, t) => ICons(h, t ++ that)
     }
 
-  def append(that: IList[A]): IList[A] = ???
-  // TODO: implemnt this using Fold instead of pattern matching
+  def append(that: IList[A]): IList[A] =
+    that.fold(this)(IList.cons)
 
+  // TODO: implemnt this using Fold instead of pattern matching
 }
 
 final case class INil[A]() extends IList[A]
