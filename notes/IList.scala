@@ -1,5 +1,8 @@
 package com.c12e.learn
 
+// could have done:
+// import IList.{INil, ICons} -> brings this in scope for the file, not the package...
+// and moved INil and ICons into companion object,
 
 // Algebraic Data Type  - 80s, 90s - objects were compared to Abstract Data Types
 // class Foooooooo(/*private members*/ private: Any)
@@ -32,6 +35,15 @@ sealed abstract class IList[A] {
 
             case ICons(h, t) => ifCons(h, t.fold(ifNil)(ifCons))
         }
+
+    // Symbolid names that end in colon
+    def +:(a: A): IList[A] = ICons(a, this)
+    // because the name ends with a colon, it flips the element
+    // x +: ilist
+    // defined on the ilist, not the element, but this will call +: on the ilist!
+    // gave us special syntax for all data structures ...
+    // can also do ilist.+:(x)
+
 
     // To not blow stack....
     // IDE will tell you if tail call optimized
@@ -97,6 +109,17 @@ final case class ICons[A] (head: A, tail: IList[A]) extends IList[A]
 object IList {
     // Makes Inil look like a list
     // Inil is a constructor, not a type
+    def apply[A](a: A*): IList[A] =
+        a.foldRight(nil[A])(cons)
+
+        // Could have done fold left as well...
+        // 1 2 3 4
+        // 1 + (2 + (3 + (4 + 0))) -> Fold Left
+        // ((((0 + 1) + 2) + 3) + 4)
+        // Fold left would have been in reverse
+
+        // Could implement foldleft in terms of foldRight and foldright in terms of foldleft
+
     def nil[A]: IList[A] = INil()
     def cons[A](h: A, t: IList[A]): IList[A] = ICons(h, t)
 
