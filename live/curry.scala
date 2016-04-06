@@ -10,6 +10,7 @@ object Curry extends App{
    def addCurry(a: Int)(b: Int): Int =
        a + b
 
+
   // Similar to :
    // def addCurryManual(a: Int): Function1[Int, Int] =
    def addCurryManual(a: Int): Int => Int =
