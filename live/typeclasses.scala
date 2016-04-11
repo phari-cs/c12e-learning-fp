@@ -20,21 +20,25 @@ trait SemigroupInstances {
        def append(a1: Max[Int], a2: Max[Int]) = Max(math.max(a1.a, a2.a))
      }
 
-   implicit def ilistSemigroup[A : Semigroup, B : Semigroup]: Semigroup[(A, B)] =
+   implicit def tupleSemigroup[A : Semigroup, B : Semigroup]: Semigroup[(A, B)] =
      new Semigroup[(A, B)] {
        def append(p1: (A, B), p2: (A, B)) =
          (Semigroup[A].append(p1._1, p2._1), Semigroup[B].append(p1._2, p2._2))
-     } 
+     }
 
 }
 
-
 final class SemigroupOps[A](val a: A) extends AnyVal {
+  // method we are adding
   def |+|(a2: A)(implicit ev: Semigroup[A]) = ev.append(a, a2)
 }
 
-
+// thing that adds the functionality
 trait SemigroupSyntax {
+
+  // This guy and the guy below are exatly identical
+  // implicit def semigroupToOps[A]
+  //   (a: A)(implicit ev: Semigroup[A]): SemigroupOps[A] =
   implicit def semigroupToOps[A : Semigroup](a: A): SemigroupOps[A] =
     new SemigroupOps(a)
 }

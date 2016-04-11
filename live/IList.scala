@@ -1,8 +1,8 @@
 package com.c12e.learn
 
-import IList.{INil,ICons}
 
 sealed abstract class IList[A] {
+
   // Almost the same
   // def fold[B](ifNil: B, ifCons: (A, B) => B): B =
   def fold[B](ifNil: B)(ifCons: (A, B) => B): B =
@@ -11,7 +11,7 @@ sealed abstract class IList[A] {
       case ICons(h, t) => ifCons(h, t.fold(ifNil)(ifCons))
     }
 
-  def +:(a: A): IList[A] = IList.ICons(a, this)
+  def +:(a: A): IList[A] = ICons(a, this)
 
   def ++(that: IList[A]): IList[A] =
     this match {
@@ -26,13 +26,14 @@ sealed abstract class IList[A] {
 }
 
 
+final case class INil[A]() extends IList[A]
+final case class ICons[A](head: A, tail: IList[A])  extends IList[A]
+
+
 object IList {
 
   def apply[A](a: A*): IList[A] =
     a.foldRight(nil[A])(cons)
-
-  final case class INil[A]() extends IList[A]
-  final case class ICons[A](head: A, tail: IList[A])  extends IList[A]
 
    // No real motivation use "this" here
    val test = this // (companion object itself)

@@ -1,6 +1,9 @@
 package com.c12e.learn
 
 
+import SemigroupSyntax._
+
+
 object ExampleApp extends App {
 
   println(implicitly[Semigroup[String]].append("a", "b"))
@@ -8,6 +11,12 @@ object ExampleApp extends App {
 
   // silly, but possible (explicitly passing an implicit parameter)
   println(Semigroup.apply(Semigroup.stringSemigroup).append("a", "b"))
+
+  println("a" |+| "b")
+
+  println(new SemigroupOps("a") |+| "b")
+
+  println(Nel(1,2,3) |+| Nel(4,5,6))
 
   /*
   Good properties for a type class
@@ -18,7 +27,6 @@ object ExampleApp extends App {
   - each function helps derive more functions (data type independently)
   - automatic derivation of new instances
   */
-  
+
 
 }
-
