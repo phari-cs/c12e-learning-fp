@@ -5,15 +5,6 @@ package com.c12e.learn
 // monoid - identity and associative opperations
 
 
-// "New typing"
-
-// AnyVal - makes it so that its not a performance hit
-// Dont box - Value Classes / New Types
-// Extending case classes is a defect - compiler forces you to make it final
-
-final case class Max[A](a: A) extends AnyVal
-// case classes makes setters and getter, constructors
-
 // Interfaces (very close to abstract class)
 // trait
 

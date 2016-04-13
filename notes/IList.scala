@@ -109,6 +109,8 @@ final case class ICons[A] (head: A, tail: IList[A]) extends IList[A]
 object IList {
     // Makes Inil look like a list
     // Inil is a constructor, not a type
+    // type of A is now Seq
+    // DONT USE SEQ in normal code, except here...
     def apply[A](a: A*): IList[A] =
         a.foldRight(nil[A])(cons)
 

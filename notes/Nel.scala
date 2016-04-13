@@ -81,7 +81,11 @@ object Nel {
     }
 
     // To get semigroup, implement append
-
+    implicit def semigroup[A]: Semigroup[Nel[A]] =
+      new Semigroup[Nel[A]] {
+        def append(a1:Nel[A], a2:Nel[A]) : Nel[A] =
+          a1 ++ a2
+      }
 }
 
 // x = Array(1,2,3) -> calling apply on companion object
