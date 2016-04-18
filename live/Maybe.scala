@@ -24,13 +24,18 @@ object Maybe {
   implicit def maybeSemigroup[A : Semigroup]: Semigroup[Maybe[A]] =
     new Semigroup[Maybe[A]]{
       def append(a: Maybe[A], b: Maybe[A]): Maybe[A] = 
-        a match {
-          case Empty() => b
-          case Just(aa) =>
-            b match{
-              case Empty() => a
-              case Just(bb) => just(Semigroup[A].append(aa, bb))
-            }
+        //a match {
+          //case Empty() => b
+          //case Just(aa) =>
+            //b match{
+              //case Empty() => a
+              //case Just(bb) => just(Semigroup[A].append(aa, bb))
+            //}
+        //}
+        a.fold(b) { aa => 
+          b.fold(a) { bb => 
+            just(Semigroup[A].append(aa, bb))
+          }
         }
     }
 }
