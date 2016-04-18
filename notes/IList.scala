@@ -159,6 +159,17 @@ object IList {
     // @style if defined as a trait,
     // .. can put implicits on traist
     // if mixinin is involved, give it unique name across mixins.
+
+    // implicits -> an implications..
+    // by labling things as implicits - candidates for universal truths -
+    // the number of functions that turn tings into things are huge - the
+    // an implicit implies that this should be a universal truth
+    // Some blog article about univeral coherence
+    // ... dude doesnt make advocay on global uniqueness, scalaers dont really talk about it, but haskellers do
+    // if we ever import implicits, dont need to think of concepts
+
+    // global uniqueness -> doesnt matter who wrote a function with that signature
+
     implicit def ilistSemigroup[A]: Semigroup[IList[A]] = {
         new Semigroup[IList[A]] {
             def append(a: IList[A], b: IList[A]): IList[A] = a ++ b

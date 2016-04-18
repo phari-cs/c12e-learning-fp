@@ -29,6 +29,10 @@ package com.c12e.learn
 // This dude is a type
 
 // @ImplicitsNotFound("need a semigroup typeclass")I
+
+// This [A] is important! We cant put an [B] on append -> append[B]
+// Cant change signature of trait
+
 trait Semigroup[A] {
     // must be associative a append b append c = ((a app b) append) = (a append (b append c))
     def append(a1: A, a2: A): A
