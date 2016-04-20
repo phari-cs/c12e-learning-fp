@@ -22,6 +22,11 @@ sealed abstract class IList[A] {
   def append(that: IList[A]): IList[A] =
     that.fold(this)(IList.cons)
 
+  def map[B](f: A => B): IList[B] =
+    fold(IList.nil[B]) { (a, bs) =>
+      IList.cons(f(a), bs)
+    }
+
   // TODO: implemnt this using Fold instead of pattern matching
 }
 
@@ -49,5 +54,8 @@ object IList {
      new Semigroup[IList[A]] {
        def append(l1: IList[A], l2: IList[A]) = l1 ++ l2
      }
+
+   // Stopped here on 4/20/16
+   implicit val ilistFunctor: Functor[IList] = ???
 
 }
