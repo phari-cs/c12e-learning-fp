@@ -24,6 +24,9 @@ package com.c12e.learn
 // wont allow numbers....
 
 sealed abstract class IList[A] {
+    // Stuff here is a method, this is set
+    // If it compiles, high prob its right, programming at a high level of abstraction
+
     // FOLD: destructure any object, and call function on held data.
     // can make fold for any data structure
     // reduce - fold makes sense on empty list, reduce doesnt,
@@ -57,6 +60,13 @@ sealed abstract class IList[A] {
             // Can also do double
             // case x@ICons(h, y@ICons(ht, t)) => ICons(h, t ++ that)
         }
+
+    // maps are structure preserving, lenght of first map = length of second
+    // dont need to write unit test for this, prooven for free with paramatricity
+    // based on laws of functors, we know that length cant change
+    def map[B](f: A => B): IList[B] =
+      fold(INil(): IList[B])( (a, bs) => ICons(f(a), bs))
+
 }
 
 object Test {
@@ -175,6 +185,29 @@ object IList {
             def append(a: IList[A], b: IList[A]): IList[A] = a ++ b
         }
     }
+
+    implicit val ilistFunctor: Functor[IList] =
+      // IList[A] full type, functor doesnt take type, it takes type constructor
+      // List has a kind * -> *
+      // Type of type is kind, List :: * -> *
+      // List takes one type param before it gets a concrete type
+      // Int :: *
+      // List[Int] :: *
+      // Int is a type, List is a type constructor
+      // Functors take type constructors
+      // ... so we need Functor[IList] ... but what function do we pass to the map now?
+      // ... need to turn it into a val
+
+      // number of _  equals number of * in *->*
+      // Can have Foo[_, _[_,_]]
+      // Formal notation for a * -> (*->*->*->) -> *
+      // Function that takes types and spits out types - type constrictor
+      // gamma, beta type constructors ? some type constructors can take a value and spit out types
+
+      new Functor[IList] {
+        def map(l1: IList)(f: A => B) = l1.map(f)
+      }
+      // prefidate functor logic - logic without varaibles?
 }
 
 // every fold,
