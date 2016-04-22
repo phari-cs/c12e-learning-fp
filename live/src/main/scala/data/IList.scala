@@ -2,7 +2,7 @@ package com.c12e.learn
 package data
 
 
-import com.c12e.learn.typeclass.Semigroup
+import com.c12e.learn.typeclass.{Functor, Semigroup}
 
 
 sealed abstract class IList[A] {
@@ -49,12 +49,14 @@ object IList {
   def id[A](list: IList[A]): IList[A] =
     list.fold(nil[A])(cons)
 
-  implicit def ilistSemigroup[A]: Semigroup[IList[A]] =
+  implicit def semigroup[A]: Semigroup[IList[A]] =
     new Semigroup[IList[A]] {
       def append(l1: IList[A], l2: IList[A]) = l1 ++ l2
     }
 
-  // TODO: Stopped here on 4/20/16
-  // implicit val ilistFunctor: Functor[IList] = ???
+   implicit def functor: Functor[IList] =
+     new Functor[IList] {
+       def map[A, B](i: IList[A])(f: A => B) = i map f
+     }
 
 }
