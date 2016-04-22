@@ -1,8 +1,14 @@
 package com.c12e.learn
+package data
+
+
+import com.c12e.learn.typeclass.Semigroup
 
 
 sealed abstract class Nel[A] { self =>
+
   def head: A
+
   def tail: IList[A]
 
   def ++(that: Nel[A]): Nel[A] = {
@@ -11,6 +17,7 @@ sealed abstract class Nel[A] { self =>
       def tail = self.tail ++ (that.head +: that.tail)
     }
   }
+
 }
 
 
@@ -27,4 +34,5 @@ object Nel {
       def append(a1:Nel[A], a2:Nel[A]) : Nel[A] =
         a1 ++ a2
     }
+
 }

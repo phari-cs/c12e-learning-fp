@@ -1,11 +1,12 @@
 package com.c12e.learn
 
 
-import SemigroupSyntax._
+//import SemigroupSyntax._
 
 
 object ExampleApp extends App {
 
+  /*
   println(implicitly[Semigroup[String]].append("a", "b"))
   println(Semigroup[String].append("a", "b"))
 
@@ -18,7 +19,6 @@ object ExampleApp extends App {
 
   println(Nel(1,2,3) |+| Nel(4,5,6))
 
-  /*
   Good properties for a type class
   --------------------------------
   - global uniqueness of instances for a type
