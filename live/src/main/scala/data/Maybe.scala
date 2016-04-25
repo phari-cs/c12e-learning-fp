@@ -2,16 +2,19 @@ package com.c12e.learn
 package data
 
 
-import com.c12e.learn.typeclass.Semigroup
+import com.c12e.learn.typeclass.{ Functor, Semigroup }
 
 
 sealed abstract class Maybe[A] {
 
-  def fold[B](ifEmpty: B)(ifJust: A => B): B =
+  def fold[B](ifEmpty: B)(ifJust: A Function B): B =
     this match {
       case Empty() => ifEmpty
       case Just(a) => ifJust(a)
     }
+
+  def map[B](f: A => B): Maybe[B] =
+    this.fold(Maybe.empty[B])(f andThen Maybe.just)
 
 }
 
@@ -32,7 +35,7 @@ object Maybe {
       case Just(a) => ifJust(a)
     }
 
-  implicit def maybeSemigroup[A : Semigroup]: Semigroup[Maybe[A]] =
+  implicit def semigroup[A : Semigroup]: Semigroup[Maybe[A]] =
     new Semigroup[Maybe[A]]{
       def append(a: Maybe[A], b: Maybe[A]): Maybe[A] =
         a.fold(b) { aa =>
@@ -40,6 +43,12 @@ object Maybe {
             just(Semigroup[A].append(aa, bb))
           }
         }
+    }
+
+  implicit def functor: Functor[Maybe] =
+    new Functor[Maybe] {
+      def map[A, B](ma: Maybe[A])(f: A => B): Maybe[B] =
+        ma.map(f)
     }
 
 }
