@@ -180,6 +180,7 @@ object IList {
 
     // global uniqueness -> doesnt matter who wrote a function with that signature
 
+    // This doesnt take a value - this is for typeclass encoding!
     implicit def ilistSemigroup[A]: Semigroup[IList[A]] = {
         new Semigroup[IList[A]] {
             def append(a: IList[A], b: IList[A]): IList[A] = a ++ b

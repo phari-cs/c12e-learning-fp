@@ -81,6 +81,11 @@ object Semigroup extends SemigroupInstances{
     // I can five you an answer but i need a proof that you
     // looks for typeclass companion object and companion object companion objects, thus same name is needed)
     // companion objects - places to put evidence of implementation
+
+    // Wrapper class,
+    // When you have one element, (1 elem), can possibly extend anyval to optimize
+    // Chose to support feature without optomizing this by default
+
     @inline def apply[A](implicit ev: Semigroup[A]) = ev
 
     val Pi = 3.14
@@ -124,17 +129,57 @@ final class SemigroupOps[A](val a: A) extends AnyVal {
 
     // different ++ -> only on list...
     // this will exist on all semigroups
+
+    // Dont bring something into scope willy nilly, ... compile will search everywhere.
+
     def |+|(a2: A)(implicit ev1: Semigroup[A]) = ev1.append(a, a2)
 }
 
+
+  // put into trait so we can mix syntaxes
+  // nice to leave
+  // only thing to seal is algebraic data types.
+  // sealed is about pattern matching and exaustive search
+  // if you dont seal, someone can add another case!
+
+
 // Mix trait into package objects
 trait SemigroupSyntax {
+  // Using implicit to automatically convert any A to Ops[A]
+  // Only applies to A's that are semi group
+  // implicit def that takes a value - this is for syntax enhacement
+
     implicit def semigroupToOps[A: Semigroup](a:A): SemigroupOps[A] =
+      // No client should ever do new Ops - only here
         new SemigroupOps(a)
 }
 
+
+  // Put into companion object of semigroup, doesnt pollute namespaces...
+  // Becomes semigroup.syntax instead of making a trait SemigroupSyntax
+
+  // Added companion object so we can import
+
+  // Using implicits for typeclass encoding - try to find instance of an interface implicitly
+  // Now we are using it to add a method (syntax enhacement)
+
+
+
 // Lets us import it ... cant import trait
 object SemigroupSyntax extends SemigroupSyntax
+
+trait SemigroupLaws extends SemigroupSyntax {
+  def associativity[A : Semigroup](x: A, y: A, z: A): Boolean =
+    // Type cohersion guided by syntax rules
+    // Tried to use operator
+    // Can i coherse this thing into something that has |+| implemented
+    // Looking for implicit function vs implicit value
+    // Difference between typeclass encoding (looks for certain value) and syntax enhacement (looks for certain function)
+    ((x |+| y) |+| z) == (x |+| (y |+| z))
+}
+
+object Laws extends Laws
+
 
 object ExampleApp extends App {
     println(Semigroup.Pi)
