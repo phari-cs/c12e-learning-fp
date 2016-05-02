@@ -1,6 +1,8 @@
 package com.c12e.learn
 package data
 
+import com.c12e.learn.typeclass.Functor
+
 
 sealed trait \/[A, B]
 
@@ -24,6 +26,11 @@ object \/ {
   }
 
   object Syntax extends Syntax
+
+  implicit def functor[A]: Functor[A \/ ?] =
+    new Functor[A \/ ?] {
+
+    }
 
 }
 
