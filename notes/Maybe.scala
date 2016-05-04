@@ -15,11 +15,11 @@ object Maybe {
   def empty[A]: Maybe[A] = Empty()
   def just[A](a: A): Maybe[A] = Just(a)
 
-  def fold[A, B](o: Maybe[B])(ifEmpty: A)(ifJust: B => A): A =
-    o match {
-      case Empty() => ifEmpty
-      case Just(a) => ifJust(a)
-    }
+  // def fold[A, B](o: Maybe[A])(ifEmpty: B)(ifJust: A => B): B =
+  //   o match {
+  //     case Empty() => ifEmpty
+  //     case Just(a) => ifJust(a)
+  //   }
 
     // compiles: A Function B
     // compiles: Function[A, B]
@@ -33,7 +33,7 @@ object Maybe {
     // A function just is a map
     // with infix, its keasier to tell what key and value is ...
     // A ==>> B
-    def map[B](f: A => B): Maybe[B] = {
+    def map[A, B](m: Maybe[A])(f: A => B): Maybe[B] = {
       // _ only works for partial applciation when you have one parenthesis
       // demoss ennly miderdern inference algorithm ... uses type of the first arg to infer second arg
       // not good inference - due to java stuff?
@@ -51,7 +51,7 @@ object Maybe {
       // Point free style - dont point at the variable we are using...
       // Haskell has rich oppertunity for point free, because space composes, and nature of lambda caluclus
       // Not as good in scala - parenthesis
-      this.fold(Maybe.empty[B])((Maybe.just[B]_ compose f))
+      m.fold(Maybe.empty[B])(x => Just[B](f(x)))
 
 
     }
@@ -127,7 +127,7 @@ object Maybe {
 
         //
         def map[A, B](ma: Maybe[A])(f: A => B): Maybe[B] =
-          ma.map(f)
+          map(ma)(f)
       }
     }
     // There is a correspondence between logic and types - univeral quantification and exestential quantification.

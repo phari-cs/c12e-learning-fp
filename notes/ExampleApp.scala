@@ -1,10 +1,12 @@
 package com.c12e.learn
 
-import com.c12e.learn.data.Nel
-import com.c12e.learn.typeclass.Semigroup
+// import com.c12e.learn.Nel
+// import com.c12e.learn.Semigroup
+
 // Static wildcard
-import com.c12e.learn.typeclass.Semigroup.Syntax._
-import com.c12e.learn.stdlib.StringInstances._
+// import com.c12e.learn.SemigroupSyntax._
+import com.c12e.learn.SemigroupSyntax._
+// import com.c12e.learn.stdlib.StringInstances._
 
 // ... these dont have to reference files ...
 // Can import objects in package
@@ -24,11 +26,11 @@ object ExampleApp extends App {
   println(Semigroup[String].append("a", "b"))
 
   // silly, but possible (explicitly passing an implicit parameter)
-  println(Semigroup.apply(stdlib.StringInstances.stringMonoid).append("a", "b"))
+  // println(Semigroup.apply(stdlib.StringInstances.stringMonoid).append("a", "b"))
 
   println("a" |+| "b")
 
-  println(new Semigroup.Ops("a") |+| "b")
+  println(new SemigroupOps("a") |+| "b")
 
   println(Nel(1,2,3) |+| Nel(4,5,6))
 

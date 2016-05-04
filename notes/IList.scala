@@ -206,7 +206,7 @@ object IList {
       // gamma, beta type constructors ? some type constructors can take a value and spit out types
 
       new Functor[IList] {
-        def map(l1: IList)(f: A => B) = l1.map(f)
+        def map[A, B](l1: IList[A])(f: A => B) = l1.map(f)
       }
       // prefidate functor logic - logic without varaibles?
 }

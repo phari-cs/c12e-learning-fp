@@ -74,7 +74,7 @@ trait SemigroupInstances {
 
 // object Semigroup {
 // Do this to enable syntax
-object Semigroup extends SemigroupInstances{
+object Semigroup extends SemigroupInstances {
 
     // similar to __call__
     // Before this line Semigroup() would return nothing
@@ -178,19 +178,19 @@ trait SemigroupLaws extends SemigroupSyntax {
     ((x |+| y) |+| z) == (x |+| (y |+| z))
 }
 
-object Laws extends Laws
+object Laws extends SemigroupLaws
 
 
-object ExampleApp extends App {
-    println(Semigroup.Pi)
-
-    // Both are about same, but line about makes it so that we dont need it...
-    println(implicitly[Semigroup[String]].append("a", "b"))
-    println(Semigroup[String].append("a", "b"))
-
-    // explicitly pass an implicit parameter
-    println(Semigroup.apply(Semigroup.stringSemigroup).append("a", "b"))
-}
+// object ExampleApp extends App {
+//     println(Semigroup.Pi)
+//
+//     // Both are about same, but line about makes it so that we dont need it...
+//     println(implicitly[Semigroup[String]].append("a", "b"))
+//     println(Semigroup[String].append("a", "b"))
+//
+//     // explicitly pass an implicit parameter
+//     println(Semigroup.apply(Semigroup.stringSemigroup).append("a", "b"))
+// }
 
 // console ...
 
