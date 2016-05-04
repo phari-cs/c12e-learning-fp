@@ -19,10 +19,10 @@ object Monoid {
 
   trait Laws extends Semigroup.Laws with Syntax {
 
-    def leftIdentity[A : Monoid](a: A): Boolean =
+    def monoidLeftIdentity[A : Monoid](a: A): Boolean =
       (empty |+| a) == a
 
-    def rightIdentity[A : Monoid](a: A): Boolean =
+    def monoidRightIdentity[A : Monoid](a: A): Boolean =
       (a |+| empty) == a
 
   }

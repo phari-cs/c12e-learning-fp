@@ -46,9 +46,3 @@ object \/ {
     }
 
 }
-
-/*
--\/[String, Foo](new Foo)
-\/.right[String, Foo](new Foo)
-(new Foo).right[String]
-*/

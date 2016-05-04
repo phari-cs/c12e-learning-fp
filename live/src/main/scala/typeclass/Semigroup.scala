@@ -23,7 +23,7 @@ object Semigroup {
   object Syntax extends Syntax
 
   trait Laws extends Syntax {
-    def associativity[A : Semigroup](x: A, y: A, z: A): Boolean =
+    def semigroupAssociativity[A : Semigroup](x: A, y: A, z: A): Boolean =
       ((x |+| y) |+| z) == (x |+| (y |+| z))
   }
 

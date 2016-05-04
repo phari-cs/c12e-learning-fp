@@ -23,15 +23,17 @@ object Functor {
 
   object Syntax extends Syntax
 
-  object Laws extends Syntax {
+  trait Laws extends Syntax {
 
-    def identity_[F[_] : Functor, A](fa: F[A]): Boolean =
+    def functorIdentity_[F[_] : Functor, A](fa: F[A]): Boolean =
       fa.map(identity) == fa
 
-    def composition[F[_] : Functor, A, B, C]
+    def functorComposition[F[_] : Functor, A, B, C]
         (fa: F[A])(f: A => B)(g: B => C): Boolean =
       fa.map(f).map(g) == fa.map(g compose f)
 
   }
+
+  object Laws extends Laws
 
 }
