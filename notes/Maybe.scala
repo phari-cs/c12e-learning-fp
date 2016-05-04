@@ -125,7 +125,8 @@ object Maybe {
         // Functor for a maybe, irrespective of what it was a maybe of
         // Need this uinversiality
 
-        //
+        // map and ap in applicator feel the same
+        // it and the apply kinda look the same
         def map[A, B](ma: Maybe[A])(f: A => B): Maybe[B] =
           map(ma)(f)
       }

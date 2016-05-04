@@ -1,6 +1,10 @@
 package com.c12e.learn
 package data
 
+
+// Conjunction is given to you for free..
+// A tuple of a disjunction is a conjunction
+
 // Through curry howard not exclusive??
 // But there is exclusivity...
 
