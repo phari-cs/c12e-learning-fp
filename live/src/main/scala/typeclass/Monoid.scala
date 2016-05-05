@@ -17,13 +17,16 @@ object Monoid {
 
   object Syntax extends Syntax
 
-  trait Laws extends Semigroup.Laws with Syntax {
+  trait Laws extends Semigroup.Laws {
 
-    def monoidLeftIdentity[A : Monoid](a: A): Boolean =
-      (empty |+| a) == a
+    import Syntax._
+    import Equal.Syntax._
 
-    def monoidRightIdentity[A : Monoid](a: A): Boolean =
-      (a |+| empty) == a
+    def monoidLeftIdentity[A : Monoid : Equal](a: A) =
+      (empty |+| a) === a
+
+    def monoidRightIdentity[A : Monoid: Equal](a: A) =
+      (a |+| empty) === a
 
   }
 

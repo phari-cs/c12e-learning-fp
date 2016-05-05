@@ -36,29 +36,41 @@ object Applicative {
 
   object Syntax extends Syntax
 
-  object Laws extends Functor.Laws with Syntax {
+  object Laws extends Functor.Laws {
 
-    def applicativeIdentity[F[_] : Applicative, A](fa: F[A]) =
-      (fa <*> (identity[A] _).pure[F]) == fa
+    import Syntax._
+    import Equal.Syntax._
 
-    def homomorphism[F[_] : Applicative, A, B](a: A, ab: A => B) =
-      (a.pure[F] <*> ab.pure[F]) == ab(a).pure[F]
+    def applicativeIdentity[F[_] : Applicative, A]
+        (fa: F[A])
+        (implicit ev: Equal[F[A]]) =
+      (fa <*> (identity[A] _).pure[F]) === fa
 
-    def interchange[F[_] : Applicative, A, B](a: A, f: F[A => B]) =
-      (a.pure[F] <*> f) == (f <*> { (ff: A => B) => ff(a) }.pure[F])
+    def applicativeHomomorphism[F[_] : Applicative, A, B]
+        (a: A, ab: A => B)
+        (implicit ev: Equal[F[B]]) =
+      (a.pure[F] <*> ab.pure[F]) === ab(a).pure[F]
+
+    def applicativeInterchange[F[_] : Applicative, A, B]
+        (a: A, f: F[A => B])
+        (implicit ev: Equal[F[B]]) =
+      (a.pure[F] <*> f) === (f <*> { (ff: A => B) => ff(a) }.pure[F])
 
     def applicativeComposition[F[_] : Applicative, A, B, C]
-        (fa: F[A], fab: F[A => B], fbc: F[B => C]) = {
+        (fa: F[A], fab: F[A => B], fbc: F[B => C])
+        (implicit ev: Equal[F[C]]) = {
       val lhs = (fa <*> fab) <*> fbc
       val rhs =
         (fa <*>
           (fab <*>
             (fbc map { (bc: B => C) => (ab: A => B) => bc compose ab })))
-      lhs == rhs
+      lhs === rhs
     }
 
-    def applicativeDerivedMap[F[_] : Applicative, A, B](f: A => B, fa: F[A]) =
-      fa.map(f) == (fa <*> f.pure[F])
+    def applicativeDerivedMap[F[_] : Applicative, A, B]
+        (f: A => B, fa: F[A])
+        (implicit ev: Equal[F[B]]) =
+      fa.map(f) === (fa <*> f.pure[F])
 
   }
 

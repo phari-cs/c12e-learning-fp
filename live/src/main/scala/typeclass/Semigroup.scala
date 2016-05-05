@@ -22,9 +22,14 @@ object Semigroup {
 
   object Syntax extends Syntax
 
-  trait Laws extends Syntax {
-    def semigroupAssociativity[A : Semigroup](x: A, y: A, z: A): Boolean =
-      ((x |+| y) |+| z) == (x |+| (y |+| z))
+  trait Laws {
+
+    import Syntax._
+    import Equal.Syntax._
+
+    def semigroupAssociativity[A : Semigroup : Equal](x: A, y: A, z: A) =
+      ((x |+| y) |+| z) === (x |+| (y |+| z))
+
   }
 
   object Laws extends Laws

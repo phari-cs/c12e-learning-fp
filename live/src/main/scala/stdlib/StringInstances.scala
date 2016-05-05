@@ -2,7 +2,7 @@ package com.c12e.learn
 package stdlib
 
 
-import com.c12e.learn.typeclass.Monoid
+import com.c12e.learn.typeclass.{ Equal, Monoid }
 
 
 trait StringInstances {
@@ -12,6 +12,8 @@ trait StringInstances {
       def append(a1: String, a2: String) = a1 + a2
       def empty = ""
     }
+
+  implicit def stringEqual: Equal[String] = Equal.fromObject[String]
 
 }
 

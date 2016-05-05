@@ -2,7 +2,8 @@ package com.c12e.learn
 package data
 
 
-import com.c12e.learn.typeclass.{ Functor, Semigroup }
+import com.c12e.learn.typeclass.{ Equal, Functor, Semigroup }
+import com.c12e.learn.typeclass.Equal.Syntax._
 
 
 sealed abstract class Maybe[A] {
@@ -49,6 +50,14 @@ object Maybe {
     new Functor[Maybe] {
       def map[A, B](ma: Maybe[A])(f: A => B): Maybe[B] =
         ma.map(f)
+    }
+
+  implicit def equal[A : Equal]: Equal[Maybe[A]] =
+    new Equal[Maybe[A]] {
+      def equal(ma: Maybe[A], mb: Maybe[A]) =
+        ma.fold(mb.fold(true) { _ => false }) { a =>
+          mb.fold(false) { b => a === b }
+        }
     }
 
 }
