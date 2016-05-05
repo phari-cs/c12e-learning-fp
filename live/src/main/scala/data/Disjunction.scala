@@ -2,7 +2,8 @@ package com.c12e.learn
 package data
 
 
-import com.c12e.learn.typeclass.Functor
+import com.c12e.learn.typeclass.{ Equal, Functor }
+import com.c12e.learn.typeclass.Equal.Syntax._
 
 
 sealed trait \/[A, B] {
@@ -43,6 +44,16 @@ object \/ {
     new Functor[A \/ ?] {
       def map[B, C](fb: A \/ B)(f: B => C): A \/ C =
         fb map f
+    }
+
+  implicit def equal[A : Equal, B : Equal]: Equal[A \/ B] =
+    new Equal[A \/ B] {
+      def equal(d1: A \/ B, d2: A \/ B) =
+        d1.fold { a1 =>
+          d2.fold { _ === a1 } { _ => false } 
+        } { b1 =>
+          d2.fold { _ => false } { _ === b1 } 
+        }
     }
 
 }

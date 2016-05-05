@@ -20,9 +20,10 @@ object Equal {
 
   @inline def apply[A](implicit ev: Equal[A]): Equal[A] = ev
 
-  def fromObject[A]: Equal[A] = new Equal[A] {
-    def equal(a1: A, a2: A) = a1 == a2
-  }
+  def fromObject[A]: Equal[A] =
+    new Equal[A] {
+      def equal(a1: A, a2: A) = a1 == a2
+    }
 
   class Ops[A](val a: A) extends AnyVal {
 

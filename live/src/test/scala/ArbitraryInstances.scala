@@ -4,7 +4,7 @@ package test
 
 import org.scalacheck.{ Arbitrary, Gen }
 
-import com.c12e.learn.data.{ Max, Maybe }
+import com.c12e.learn.data._
 import com.c12e.learn.typeclass.{ Applicative, Functor }
 import com.c12e.learn.typeclass.Functor.Syntax._
 
@@ -33,15 +33,13 @@ trait ArbitraryInstances {
     arb[A] map Max.apply
 
   implicit def maybeArbitrary[A : Arbitrary]: Arbitrary[Maybe[A]] =
-    Arbitrary(Gen.sized(n =>
-      // When n is larger, make it less likely that we generate None,
-      // but still do it some of the time. When n is zero, we always
-      // generate None, since it's the smallest value.
-      Gen.frequency(
-        (n, Gen.resize(n / 2, Arbitrary.arbitrary[A]).map(Maybe.just[A])),
-        (1, Gen.const(Maybe.empty)))))
+    arb[Option[A]] map { _.fold(Maybe.empty[A])(Maybe.just) }
 
-  private def arb[A: Arbitrary]: Arbitrary[A] = implicitly[Arbitrary[A]]
+  implicit def disjunctionArbitrary[A : Arbitrary, B : Arbitrary]
+      : Arbitrary[A \/ B] =
+    arb[Either[A, B]] map { _.fold(\/.left, \/.right) }
+
+  private def arb[A](implicit ev: Arbitrary[A]): Arbitrary[A] = ev
 
 }
 
