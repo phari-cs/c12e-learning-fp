@@ -2,7 +2,7 @@ package com.c12e.learn
 package typeclass
 
 
-import stdlib.BooleanSyntax
+import com.c12e.learn.stdlib.syntax.BooleanSyntax
 
 
 trait Equal[A] { self =>

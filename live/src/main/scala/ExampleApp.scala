@@ -5,7 +5,8 @@ import com.c12e.learn.data.Nel
 import com.c12e.learn.data.\/.Syntax._
 import com.c12e.learn.typeclass.Semigroup
 import com.c12e.learn.typeclass.Semigroup.Syntax._
-import com.c12e.learn.stdlib.StringInstances._
+import com.c12e.learn.stdlib.instances.StringInstances
+import com.c12e.learn.stdlib.instances.StringInstances._
 
 
 object ExampleApp extends App {
@@ -15,7 +16,7 @@ object ExampleApp extends App {
   println(Semigroup[String].append("a", "b"))
 
   // silly, but possible (explicitly passing an implicit parameter)
-  println(Semigroup.apply(stdlib.StringInstances.stringMonoid).append("a", "b"))
+  println(Semigroup.apply(StringInstances.stringMonoid).append("a", "b"))
 
   println("a" |+| "b")
 

@@ -1,5 +1,6 @@
 package com.c12e.learn
 package stdlib
+package syntax
 
 
 class BooleanOps(val a: Boolean) extends AnyVal {

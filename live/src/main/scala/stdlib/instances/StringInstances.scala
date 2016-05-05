@@ -1,5 +1,6 @@
 package com.c12e.learn
 package stdlib
+package instances
 
 
 import com.c12e.learn.typeclass.{ Equal, Monoid }
