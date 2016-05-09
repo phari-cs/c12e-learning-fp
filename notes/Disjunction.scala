@@ -11,6 +11,8 @@ package data
 // Names can be symbolic
 // Can do traits or abstract classes
 import com.c12e.learn.Functor
+import com.c12e.learn.Equal
+import com.c12e.learn.Equal.Syntax._
 
 // Trait can be a typical alpha numeric, or all symbolic
 // Special case: No method or object - no analog on the type level for the weird properties of stuff that ends with ":"
@@ -133,4 +135,22 @@ object \/ {
       }
     }
 
+    // Looks for implicit definitions on companion when you have a === of disjunctions
+    // Weve mad a whole crapton of equals instances
+    // If we have:
+    // val foo: implicitly[Equal[Int \/ Int]]
+    // We need to first import Equal[Int] (Int is on std lib and doesnt have Equal on companion object.)
+
+    implicit def equal[A: Equal, B: Equal]: Equal[ A \/ B] =
+      new Equal[ A \/ B] {
+        def equal(l: A \/ B, r: A \/ B): Boolean = {
+          l.fold {
+              a => r.fold(a2 => a === a2)(b2 => false)
+              // a => r.fold(_ === a)(_ => false)
+            }{
+              b => r.fold(b2 => false)(b2 => b === b2)
+              // b => r.fold(_ => false)(_ === b)
+            }
+        }
+      }
 }
