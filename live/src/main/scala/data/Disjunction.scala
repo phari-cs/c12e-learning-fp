@@ -5,7 +5,6 @@ package data
 import com.c12e.learn.typeclass.{ Equal, Functor, Applicative }
 import com.c12e.learn.typeclass.Equal.Syntax._
 
-
 sealed trait \/[A, B] {
 
   def fold[C](ifLeft: A => C)(ifRight: B => C): C =
@@ -39,26 +38,19 @@ object \/ {
   }
 
   object Syntax extends Syntax
-
-  implicit def functor[A]: Functor[A \/ ?] =
-    new Functor[A \/ ?] {
-      def map[B, C](fb: A \/ B)(f: B => C): A \/ C =
-        fb map f
-    }
+  import Syntax._
 
   implicit def applicative[A]: Applicative[A \/ ?] =
     new Applicative[A \/ ?] {
-      def pure[B](b: B): A \/ B = right(b)
+
+      def pure[B](b: B): A \/ B = b.right[A]
 
       def ap[B, C](fa: A \/ B)(fab: \/[A, B => C]): A \/ C =
-        // If we have a B => C, map it to the fa
-        fab.fold(a => left(a): A \/ C)(b_to_c => fa.map(b_to_c))
+        fa.fold { _.left[C] } { b => fab map { f => f(b) } }
 
-        // Do we have to implement map twice? Cant we somehow tell scala that we have a functor with map already imeplmented?
       def map[B, C](fb: A \/ B)(f: B => C): A \/ C =
-        // Simply pointing the applicatives map to the functors implementaiton
-        // Note: We will get an error if map isnt implemented for functor
-        implicitly[Functor[A \/ ?]].map(fb)(f)
+        fb map f
+
     }
 
   implicit def equal[A : Equal, B : Equal]: Equal[A \/ B] =

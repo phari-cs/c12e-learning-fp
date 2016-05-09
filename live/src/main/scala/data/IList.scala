@@ -2,7 +2,9 @@ package com.c12e.learn
 package data
 
 
-import com.c12e.learn.typeclass.{Functor, Semigroup, Applicative}
+import scala.annotation.tailrec
+
+import com.c12e.learn.typeclass.{Semigroup, Applicative}
 
 
 sealed abstract class IList[A] {
@@ -11,6 +13,13 @@ sealed abstract class IList[A] {
     this match {
       case INil() => ifNil
       case ICons(h, t) => ifCons(h, t.fold(ifNil)(ifCons))
+    }
+
+  @tailrec
+  def foldLeft[B](ifNil: B)(ifCons: (B, A) => B): B =
+    this match {
+      case INil() => ifNil
+      case ICons(h, t) => t.foldLeft(ifCons(ifNil, h))(ifCons)
     }
 
   def +:(a: A): IList[A] = ICons(a, this)
@@ -54,22 +63,15 @@ object IList {
       def append(l1: IList[A], l2: IList[A]) = l1 ++ l2
     }
 
-   implicit def functor: Functor[IList] =
-     new Functor[IList] {
-       def map[A, B](i: IList[A])(f: A => B) = i map f
-     }
-
    implicit def applicative: Applicative[IList] =
      new Applicative[IList] {
-       def pure[A](a: A): IList[A] = IList(a) // We are actually calling the apply method here
+       def pure[A](a: A): IList[A] = IList(a)
 
-       // Note, if the IList[A=>B] is empty, we will get an empty list I think.
        def ap[A, B](fa: IList[A])(fab: IList[A => B]): IList[B] =
          fa.fold(IList.nil[B]){
            (head, tail) => fab.map(f => f(head)).append(tail)
          }
 
-       def map[A, B](i: IList[A])(f: A => B): IList[B] =
-         implicitly[Functor[IList]].map(i)(f)
+       def map[A, B](i: IList[A])(f: A => B): IList[B] = i map f
      }
 }
