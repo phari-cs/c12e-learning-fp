@@ -2,7 +2,7 @@ package com.c12e.learn
 package data
 
 
-import com.c12e.learn.typeclass.{Functor, Semigroup}
+import com.c12e.learn.typeclass.{Functor, Semigroup, Applicative}
 
 
 sealed abstract class IList[A] {
@@ -59,4 +59,17 @@ object IList {
        def map[A, B](i: IList[A])(f: A => B) = i map f
      }
 
+   implicit def applicative: Applicative[IList] =
+     new Applicative[IList] {
+       def pure[A](a: A): IList[A] = IList(a) // We are actually calling the apply method here
+
+       // Note, if the IList[A=>B] is empty, we will get an empty list I think.
+       def ap[A, B](fa: IList[A])(fab: IList[A => B]): IList[B] =
+         fa.fold(IList.nil[B]){
+           (head, tail) => fab.map(f => f(head)).append(tail)
+         }
+
+       def map[A, B](i: IList[A])(f: A => B): IList[B] =
+         implicitly[Functor[IList]].map(i)(f)
+     }
 }
