@@ -39,6 +39,12 @@ trait ArbitraryInstances {
       : Arbitrary[A \/ B] =
     arb[Either[A, B]] map { _.fold(\/.left, \/.right) }
 
+  // Note: we are piggy-backing on being able to find an arb implemntation of List, and transforming it to IList
+  implicit def ilistArbitrary[A : Arbitrary] : Arbitrary[IList[A]] =
+    arb[List[A]] map {
+      _.foldRight(IList.nil[A]) { IList.cons }
+    }
+
   private def arb[A](implicit ev: Arbitrary[A]): Arbitrary[A] = ev
 
 }
