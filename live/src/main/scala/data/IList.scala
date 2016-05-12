@@ -100,6 +100,7 @@ object IList {
     list.fold(nil[A])(cons)
 
   implicit def equal[A : Equal]: Equal[IList[A]] =
+    // Decided not to use this... i think it breaks if one of the lists is empty (or maybe if they are different sizes)
     // new Equal[IList[A]] {
     //   def equal(l1: IList[A], l2: IList[A]) =
     //     l1.foldl2(l2)(true) {
@@ -122,7 +123,7 @@ object IList {
     new Applicative[IList] {
       def pure[A](a: A): IList[A] = IList(a)
 
-      // Getting a stack overflow
+      // Getting a stack overflow here ...
       def ap[A, B](fa: IList[A])(fab: IList[A => B]): IList[B] =
         fa.foldLeft(IList.nil[B]) {
          (agg, next) => fab.map(f => f(next)).append(agg)

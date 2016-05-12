@@ -11,13 +11,12 @@ object IListSpec extends Spec("ilist") {
   checkAll(Props.semigroup[IList[Int]])
   checkAll(Props.applicative[IList, Int, String, (Int, String)])
 
-  "printing applicative" in {
+  "Just want to print the value of the applicative" in {
     println(IList(1, 2, 3) <*> IList({x: Int => x + 1}, {x: Int => x * 10}))
     true
   }
 
-
-  "making sure zip works right" in {
+  "Making sure zip works right" in {
     val actual = IList(1, 2, 3).zip(IList(4,5))
     val expected = IList((1, 4), (2, 5))
     println("actual: " + actual)
