@@ -45,8 +45,8 @@ object \/ {
 
       def pure[B](b: B): A \/ B = b.right[A]
 
-      def ap[B, C](fa: A \/ B)(fab: \/[A, B => C]): A \/ C =
-        fa.fold { _.left[C] } { b => fab map { f => f(b) } }
+      def ap[B, C](fb: A \/ B)(fbc: A \/ (B => C)): A \/ C =
+        fb.fold { _.left[C] } { b => fbc map { f => f(b) } }
 
       def map[B, C](fb: A \/ B)(f: B => C): A \/ C =
         fb map f

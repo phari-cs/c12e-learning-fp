@@ -1,0 +1,100 @@
+map and ap :P
+
+map ⇢ from functor
+def map[F[_]:Functor, A, B]]: (A => B) => F[A] => F[B] = ???
+
+ap ⇢ from applicative
+def ap[F[_]: Applicative, A, B]: F[A => B] => F[A] => F[B]  = ???
+
+One of laws of applicative is that you can make a map with an app by pure-ing the map and doing the ap :p applicativeDerivedMap
+
+By flipping the order of passing the args, and looking at the signatures…
+
+we notice that ap and map are about the same!
+… the only difference is that ap’s arg is wrapped in F
+map: (A => B) => F[A] => F[B] = ???
+ap: F[A => B] => F[A] => F[B]
+… both are cut from same cloth…
+
+
+
+// We could move type parameter for functor form trait to def
+// Having a functor trait is saying that the functor provides the map
+// And rather than
+
+Full functions rather than lambda functions - use them - more efficient on the jvm…
+
+JVM functions on stack
+
+lambda functions are on heap
+
+getting rid of stack overflow - trampolining and something else
+
+"Safe transformations that keep the semantics"
+
+Overhead of lambda functions matching types is done at compile time
+
+
+"First Class" - colloquial? - kind of easy to do
+take a "frist class" object and assign it to a value with a name.
+
+In scala, polymorphism is not a first class citizen.
+
+✍🏻Cant make defs vals because vals dont have parameters!
+
+We wrote curry, and uncurry, we can write flip as well… A=>B=>C to B=>A=>C, thus order of passing args doesnt matter
+
+
+
+… The preview of monad…
+
+How many different functions can i make that can turn F[A]’s to F[B]’s
+
+( A-> F[B] ) => ( F[A]=>F[B] ) bind for monad
+( F[B]=> A ) => ( F[A]-> F[B] ) cobind? for comonad
+
+
+There are two ways to implement ap for disjunctions….
+app one way
+and make another thing called validation, and it will have a seperate ap
+
+
+… We will only end up having an applicative for one, and a monad for other.
+
+Monad means you have applicative… Applicative means you have functor
+
+With bind - you have pure, map, ap
+
+without composition, functor isnt as useful
+
+
+// This is how you use the syntax
+// 1.pure[A \/ ?]
+
+Applicative instance with semigroup to accumulate errors
+Clean bijection between the two - one to one mapping …
+dijunction and validation.
+
+pattern match is unpacking of data consturcutrs
+pattern match is called destructure bind!
+
+deconstructor takes value of type and gives you what you passed to construct it!
+
+constructing it goes from value to value of type
+
+"destructured bind"
+
+refereential tranparency / beta equivalence - replace call site with definition, program stays the same!
+Special thinga about fp!
+
+beta reduction / substitution:
+{b2 => … b2 … } apply x
+
+unification: replacing a more complex thing for every instance of a reference ?
+
+good haskell book … ch 2 is a lambda calculus review…
+
+variable renames - naturally and in lambda calculus - in nature, didnt go through apha substitution
+
+… for beta evaluation … we are so used to look at a function as a side effect…
+We can do this because we are not using side effects, we respect beta equivalence,
