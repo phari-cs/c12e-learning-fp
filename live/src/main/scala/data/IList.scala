@@ -9,12 +9,33 @@ import com.c12e.learn.typeclass.Equal.Syntax._
 
 sealed abstract class IList[A] {
 
+  // trampolining can turn something writen in non tailrec to something in tailrec position
+  // use cps to do something like this - expensive in scala - puts stuff on heap because stack isnt optomized for this or something - slower
+  // this kind of stuff lifts the function into a lambda, and does stuff on the heap instead of the stack
   def fold[B](ifNil: B)(ifCons: (A, B) => B): B =
     this match {
       case INil() => ifNil
       case ICons(h, t) => ifCons(h, t.fold(ifNil)(ifCons))
     }
 
+  // stack and heaps:
+
+  // -------------------------
+  // Loaded Code
+  // -------------------------
+  // Stack (physically allocated right after code usually)
+  // - stack computations faster, more efficient than heap
+  // - limit of like 1000 things on stack or something...
+  // - used every time a function is called.
+  // - inputs, functions, and outputs of function are stored on stack
+  // -------------------------
+  // Heap (much larger than stack)
+  // - much larger than stack
+  // -------------------------
+
+  // every time a function calls itself, it has the stuff that called it on the stack, and the stuff its calling itself with on the stack as well.
+  // this dude will make it so that the previous recrsive call for this function gets poped and replaced with the next call of the same funciton.
+  // Only have one of this functions call on the stack
   @tailrec
   def foldLeft[B](ifNil: B)(ifCons: (B, A) => B): B =
     this match {
@@ -53,7 +74,6 @@ sealed abstract class IList[A] {
         case ICons(h2, t2) => (h1, h2) +: t1.zip(t2)
       }
     }
-
   // this.fold() {
   //   (h1, t1) => l2.fold(IList.nil[(A, B)]) {
   //     (h2, t2) => IList.cons((h1, h2), t2)
@@ -68,16 +88,23 @@ sealed abstract class IList[A] {
       case ICons(h, t) => ICons(h, t ++ that)
     }
 
-  def append(that: IList[A]): IList[A] =
-    that.fold(this)(IList.cons)
+  def reverse(): IList[A] =
+    this.foldLeft(IList.nil[A])((agg, next) => IList.cons(next, agg))
 
-  def prepend(that: IList[A]): IList[A] =
-    this.fold(that)(IList.cons)
+  def append(that: IList[A]): IList[A] =
+    // that.fold(this)(IList.cons)
+    that.reverse.foldLeft(this)((agg, next) => IList.cons(next, agg))
+
+  // def prepend(that: IList[A]): IList[A] =
+  //   this.fold(that)(IList.cons)
 
   def map[B](f: A => B): IList[B] =
-    fold(IList.nil[B]) { (a, bs) =>
-      IList.cons(f(a), bs)
+    this.reverse.foldLeft(IList.nil[B]) { (agg, next) =>
+      IList.cons(f(next), agg)
     }
+    // fold(IList.nil[B]) { (a, bs) =>
+    //   IList.cons(f(a), bs)
+    // }
 
 }
 
