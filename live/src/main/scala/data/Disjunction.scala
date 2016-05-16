@@ -46,7 +46,11 @@ object \/ {
       def pure[B](b: B): A \/ B = b.right[A]
 
       def ap[B, C](fb: A \/ B)(fbc: A \/ (B => C)): A \/ C =
-        fb.fold { _.left[C] } { b => fbc map { f => f(b) } }
+        // fb.fold { _.left[C] } { b => fbc map { f => f(b) } }
+        fb match {
+          case -\/(a) => a.left[C] // (-\/(a): A \/ B)
+          case \/-(b) => fbc map { f => f(b) }
+        }
 
       def map[B, C](fb: A \/ B)(f: B => C): A \/ C =
         fb map f
