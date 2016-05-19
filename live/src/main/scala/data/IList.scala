@@ -4,7 +4,7 @@ package data
 
 import scala.annotation.tailrec
 
-import com.c12e.learn.typeclass.{Semigroup, Applicative, Equal}
+import com.c12e.learn.typeclass.{Monoid, Applicative, Equal}
 import com.c12e.learn.typeclass.Equal.Syntax._
 
 sealed abstract class IList[A] {
@@ -43,7 +43,7 @@ sealed abstract class IList[A] {
       case ICons(h, t) => t.foldLeft(ifCons(ifNil, h))(ifCons)
     }
 
-
+  @tailrec
   def foldl2[B, C](l2: IList[B])(ifNil: C)(ifCons: (C, A, B) => C): C =
     this match {
       case INil() => ifNil
@@ -141,8 +141,9 @@ object IList {
         }
     }
 
-  implicit def semigroup[A]: Semigroup[IList[A]] =
-    new Semigroup[IList[A]] {
+  implicit def monoid[A]: Monoid[IList[A]] =
+    new Monoid[IList[A]] {
+      def empty =  IList.nil[A]
       def append(l1: IList[A], l2: IList[A]) = l1 ++ l2
     }
 

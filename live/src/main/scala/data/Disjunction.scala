@@ -2,8 +2,9 @@ package com.c12e.learn
 package data
 
 
-import com.c12e.learn.typeclass.{ Equal, Functor, Applicative }
+import com.c12e.learn.typeclass.{ Semigroup, Equal, Functor, Applicative }
 import com.c12e.learn.typeclass.Equal.Syntax._
+import com.c12e.learn.typeclass.Semigroup.Syntax._
 
 sealed trait \/[A, B] {
 
@@ -46,11 +47,11 @@ object \/ {
       def pure[B](b: B): A \/ B = b.right[A]
 
       def ap[B, C](fb: A \/ B)(fbc: A \/ (B => C)): A \/ C =
-        // fb.fold { _.left[C] } { b => fbc map { f => f(b) } }
-        fb match {
-          case -\/(a) => a.left[C] // (-\/(a): A \/ B)
-          case \/-(b) => fbc map { f => f(b) }
-        }
+        fb.fold { _.left[C] } { b => fbc map { f => f(b) } }
+        // fb match {
+        //   case -\/(a) => a.left[C] // (-\/(a): A \/ B)
+        //   case \/-(b) => fbc map { f => f(b) }
+        // }
 
       def map[B, C](fb: A \/ B)(f: B => C): A \/ C =
         fb map f
@@ -66,5 +67,10 @@ object \/ {
           d2.fold { _ => false } { _ === b1 }
         }
     }
+
+    implicit def semigroup[A, B: Semigroup]: Semigroup[A \/ B] =
+      new Semigroup[A \/ B] {
+        def append(d1: A \/ B, d2: A \/ B) = d1.fold { _.left[B] } { d11 => d2 map { d22 => d11 |+| d22 } }
+      }
 
 }

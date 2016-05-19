@@ -45,6 +45,15 @@ trait ArbitraryInstances {
       _.foldRight(IList.nil[A]) { IList.cons }
     }
 
+  // Note: we are piggy-backing on being able to find an arb implemntation of List, and transforming it to IList
+  implicit def nelArbitrary[A : Arbitrary] : Arbitrary[Nel[A]] =
+    // arb[IList[A]] map {
+    //   _.fold(arb[A] map (Nel(_)))(t => arb[A] map ( h => Nel(h, t: _*)))
+    // }.run
+    arb[(A, List[A])] map {
+      x => Nel(x._1, x._2: _*)
+    }
+
   private def arb[A](implicit ev: Arbitrary[A]): Arbitrary[A] = ev
 
 }

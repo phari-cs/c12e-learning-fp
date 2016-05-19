@@ -2,7 +2,7 @@ package com.c12e.learn
 package data
 
 
-import com.c12e.learn.typeclass.{ Equal, Functor, Semigroup }
+import com.c12e.learn.typeclass.{ Equal, Applicative, Monoid }
 import com.c12e.learn.typeclass.Equal.Syntax._
 
 
@@ -43,18 +43,22 @@ object Maybe {
       case Just(a) => ifJust(a)
     }
 
-  implicit def semigroup[A : Semigroup]: Semigroup[Maybe[A]] =
-    new Semigroup[Maybe[A]]{
+  implicit def monoid[A : Monoid]: Monoid[Maybe[A]] =
+    new Monoid[Maybe[A]]{
+      def empty = Maybe.empty[A]
       def append(a: Maybe[A], b: Maybe[A]): Maybe[A] =
         a.fold(b) { aa =>
           b.fold(a) { bb =>
-            just(Semigroup[A].append(aa, bb))
+            just(Monoid[A].append(aa, bb))
           }
         }
     }
 
-  implicit def functor: Functor[Maybe] =
-    new Functor[Maybe] {
+  implicit def applicative: Applicative[Maybe] =
+    new Applicative[Maybe] {
+      def pure[A](a: A) = just(a)
+      def ap[A, B](fa: Maybe[A])(fab: Maybe[A => B]): Maybe[B] =
+        fa.fold(empty[B])(a => fab.fold(empty[B])(ab => just(ab(a))))
       def map[A, B](ma: Maybe[A])(f: A => B): Maybe[B] =
         ma.map(f)
     }

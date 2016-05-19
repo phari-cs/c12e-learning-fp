@@ -9,6 +9,7 @@ import com.c12e.learn.stdlib.instances._
 object IListSpec extends Spec("ilist") {
   checkAll(Props.equal[IList[String]])
   checkAll(Props.semigroup[IList[Int]])
+  checkAll(Props.monoid[IList[Int]])
   // TODO: make the following test not blow stack
   // checkAll(Props.applicative[IList, Int, String, (Int, String)])
 
