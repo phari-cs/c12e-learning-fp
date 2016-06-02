@@ -5,11 +5,10 @@ package com.c12e.learn
 object Curry extends App{
 
    def add(a: Int, b: Int): Int =
-       a + b
 
+  a + b
    def addCurry(a: Int)(b: Int): Int =
        a + b
-
 
   // Similar to :
    // def addCurryManual(a: Int): Function1[Int, Int] =
@@ -22,8 +21,14 @@ object Curry extends App{
    // Can write whole program like this, bull will take a performance hit
    // JVM optimizations that we need, thats why we use defs
    // To get a function, need to make a special Function1 class
-   val addHof: Int => (Int => Int) =
-      { b => { a => a + b } }
+   val addHof: Int => Int => Int =
+      { a => { b => a + b } }
+
+   val addHofUncurried: (Int, Int) => Int =
+     { (a, b) => a + b }
+
+   val addHofUncurriedTupled: ((Int, Int)) => Int =
+     { t => t._1 + t._2 }
 
     //   addHof(1)
     //   { a => a + 1 }
@@ -38,11 +43,14 @@ object Curry extends App{
    println(addCurry(1)(2))
    println(addCurryManual(1)(2))
    println(addHof(1)(2))
+   println(addHofUncurried(1, 2))
+   println(addHofUncurried.tupled((1, 2)))
+   println(addHofUncurriedTupled((1, 2)))
 
    // 7 uses of underscore = kind noteation, exestnetial notations, wildcards, partial evaluation
    // Eta expansion can look like Partial application
-   val addPartialOne = add(1, _: Int) // Eta expansion?
-   val addCurryOne = addCurry(1)_ // Partial application
+   val addPartialOne = add(1, _: Int) //Partial application
+   val addCurryOne = addCurry(1)_ // Eta expansion?
    // equvalent?:  addCurry(1)(_) // Eta expansion turns a method / function into a firstclass function
    val addCurryManualOne = addCurryManual(1)
    val addHofOne = addHof(1)
@@ -55,13 +63,22 @@ object Curry extends App{
 
   // Curry can only be implemented one way -> Onec Inhabited
    def curry[A, B, C](f: (A, B) => C): A => B => C =
-       a => b => f(a, b)
-    //    { b => { a => f(a, b) } } Will not compile!
+      a => b => f(a, b)
+
+
+
+
+
+
+
+
+
+
    def uncurry[A, B, C](f: A => B => C): (A, B) => C =
        (a, b) => f(a)(b)
 
    def flip[A, B, C](f: A => B => C): B => A => C =
-       b => a => f(a)(b)
+     b => a => f(a)(b)
 
 // speakings about funcitons parametrically - get once inhabitant function
 
