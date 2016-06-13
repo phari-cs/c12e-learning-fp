@@ -28,7 +28,7 @@ sealed abstract class PointADT {
   def y: Int = fold((x, y) => y)
 
 }
-case class PointDC(xVal: Int, yVal: Int) extends PointADT
+final case class PointDC(xVal: Int, yVal: Int) extends PointADT
 
 object PointADT {
   def apply(x: Int, y: Int): PointADT = PointDC(x, y)
@@ -43,7 +43,7 @@ object PointC {
 }
 
 
-case class Point(x: Int, y: Int)
+final case class Point(x: Int, y: Int)
 
 
 object PointUsage {
