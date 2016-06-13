@@ -71,6 +71,27 @@ object Functor {
             fa.map(f).map(g) == fa.map(g compose f)
     // Scalaz has laws in production source code, not even in test code
   }
+
+  implicit def func1Functor[C] : Functor[ C => ?] =
+    new Functor[C => ?] {
+      def map[A, B](fa: C => A)(f: A => B): C => B =
+        a => f(fa(a))
+        // fa andThen f
+        // f compose fa
+    }
+
+  // You have something that ends with a b... it takes an a and ends with a b,
+  // so we need a functor of a type that when its filled, it can go
+
+  // The other way wont work! The whole has to be on the right because of function applicaiton...
+  // We might have a reverse engineered typeclass?
+  // implicit def func1Functor[C] : Functor[? => C] =
+  //   new Functor[? => C] {
+  //     def map[A, B](fa: A => C)(f: A => B): B => C =
+  //       b =>
+  //   }
+  // implicit def func1Functor[A] : Functor[Function1[A, ?]]
+
 }
 
 
