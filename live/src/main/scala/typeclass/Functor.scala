@@ -41,5 +41,11 @@ object Functor {
   }
 
   object Laws extends Laws
+  
+  implicit def func1Functor[A]: Functor[A => ?] = 
+    new Functor[A => ?]{
+      def map[I, J](fi: A => I)(f: I => J): A => J =
+        f compose fi
+    }
 
 }
