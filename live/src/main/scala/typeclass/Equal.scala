@@ -9,9 +9,10 @@ trait Equal[A] { self =>
 
   def equal(a1: A, a2: A): Boolean
 
-  def contramap[B](f: B => A): Equal[B] = new Equal[B] {
-    def equal(b1: B, b2: B) = self.equal(f(b1), f(b2))
-  }
+  def contramap[B](f: B => A): Equal[B] =
+    new Equal[B] {
+      def equal(b1: B, b2: B) = self.equal(f(b1), f(b2))
+    }
 
 }
 

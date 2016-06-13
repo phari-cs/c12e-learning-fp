@@ -6,16 +6,23 @@ import com.c12e.learn.typeclass.{ Equal, Functor, Semigroup }
 import com.c12e.learn.typeclass.Equal.Syntax._
 
 
-sealed abstract class Maybe[A] {
+// data Maybe[A] = Empty | Just[A](a: A)
 
-  def fold[B](ifEmpty: B)(ifJust: A Function B): B =
+sealed trait Maybe[A] {
+
+  def fold[B](ifEmpty: B)(ifJust: A => B): B =
     this match {
       case Empty() => ifEmpty
       case Just(a) => ifJust(a)
     }
 
   def map[B](f: A => B): Maybe[B] =
-    this.fold(Maybe.empty[B])(f andThen Maybe.just)
+    //fold(Maybe.empty[B])(f andThen Maybe.just)
+    //fold(Maybe.empty[B]) { a => Maybe.just(f(a)) }
+    this match {
+      case Empty() => Maybe.empty[B]
+      case Just(a) => Maybe.just(f(a))
+    }
 
 }
 
