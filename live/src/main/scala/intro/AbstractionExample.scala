@@ -1,4 +1,5 @@
 package com.c12e.learn
+package intro
 
 
 trait PointI {
@@ -28,6 +29,7 @@ sealed abstract class PointADT {
   def y: Int = fold((x, y) => y)
 
 }
+
 final case class PointDC(xVal: Int, yVal: Int) extends PointADT
 
 object PointADT {
@@ -46,11 +48,16 @@ object PointC {
 final case class Point(x: Int, y: Int)
 
 
-object PointUsage {
+object AbstractionExample extends App {
+
   val pi = PointI(1,2)
   val padt = PointADT(1,2)
   val pc = PointC(1,2)
   val p = Point(1,2)
 
-  println(s"${pi.x}, ${padt.x}, ${pc.x}, ${p.x}")
+  println(pi.x)
+  println(padt.x)
+  println(pc.x)
+  println(p.x)
+
 }

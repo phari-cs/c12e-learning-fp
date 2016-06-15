@@ -3,10 +3,11 @@ package com.c12e.learn
 
 import com.c12e.learn.data.Nel
 import com.c12e.learn.data.\/.Syntax._
+import com.c12e.learn.typeclass.Functor
 import com.c12e.learn.typeclass.Semigroup
 import com.c12e.learn.typeclass.Semigroup.Syntax._
+import com.c12e.learn.stdlib._
 import com.c12e.learn.stdlib.instances.StringInstances
-import com.c12e.learn.stdlib.instances.StringInstances._
 
 
 object ExampleApp extends App {
@@ -25,5 +26,10 @@ object ExampleApp extends App {
   println(Nel(1,2,3) |+| Nel(4,5,6))
 
   println(1.right[String])
+
+  println(
+    Functor[Int => ?]
+      .map(1 + _) { i => s"[${i}]"}
+      .apply(5))
 
 }

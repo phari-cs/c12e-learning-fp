@@ -5,6 +5,7 @@ package instances
 
 trait StdlibInstances extends
     BooleanInstances with
+    Function1Instances with
     IntInstances with
     StringInstances with
     TupleInstances
