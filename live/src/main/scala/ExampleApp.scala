@@ -6,7 +6,7 @@ import com.c12e.learn.data.\/.Syntax._
 import com.c12e.learn.typeclass.Functor
 import com.c12e.learn.typeclass.Semigroup
 import com.c12e.learn.typeclass.Semigroup.Syntax._
-import com.c12e.learn.stdlib._
+import com.c12e.learn.stdlib.All._
 import com.c12e.learn.stdlib.instances.StringInstances
 
 
